@@ -25,7 +25,7 @@ class News {
 		$table_name = $this->table_name;
 
 		try {
-			$pdo = new PDO($dsn, $user, $password);
+			$pdo = new \PDO($dsn, $user, $password);
 
 			$stmt = $pdo->prepare(sprintf('SELECT * FROM %s', self::quoteIdent($table_name)));
 
@@ -45,12 +45,12 @@ class News {
 		$user = $this->user;
 		$password = $this->password;
 		if (is_null($posted_at)) {
-			$posted_at = new Date();
+			$posted_at = new \Date();
 		}
 		$table_name = $this->table_name;
 
 		try {
-			$pdo = new PDO($dsn, $user, $password);
+			$pdo = new \PDO($dsn, $user, $password);
 
 			$stmt = $pdo->prepare(sprintf('INSERT INTO %s (posted_at, title, content) VALUES (:posted_at, :title, :content)', self::quoteIdent($table_name)));
 			$stmt->bindValue(':posted_at', $posted_at->format('Y-m-d H:i:s'), PDO::PARAM_STR);
