@@ -1,0 +1,17 @@
+{
+    "name": "nighttraveler7/news",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yuichi Hirota",
+            "email": "nighttraveler7@gmail.com"
+        }
+    ],
+    "require": {}
+    "autoload": {
+        "psr-4": {
+            "nighttraveler7\\News\\": "src/"
+        }
+    }
+}
