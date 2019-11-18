@@ -41,7 +41,7 @@ class News {
 		}
 	}
 
-	public function delete_entry($id) {
+	public function delete($id) {
 		$dsn = $this->dsn;
 		$user = $this->user;
 		$password = $this->password;
@@ -86,7 +86,7 @@ class News {
 		}
 	}
 
-	public function post($title, $content, $posted_at = NULL) {
+	public function post($title, $content, $posted_at = NULL, $id = NULL) {
 		$dsn = $this->dsn;
 		$user = $this->user;
 		$password = $this->password;
@@ -95,13 +95,23 @@ class News {
 		}
 		$table_name = $this->table_name;
 
+		if (is_null($id)) {
+			$sql = 'INSERT INTO %s (posted_at, title, content) VALUES (:posted_at, :title, :content)';
+		}
+		else {
+			$sql = 'UPDATE %s SET posted_at = :posted_at, title = :title, content = :content WHERE id = :id';
+		}
+
 		try {
 			$pdo = new \PDO($dsn, $user, $password);
 
-			$stmt = $pdo->prepare(sprintf('INSERT INTO %s (posted_at, title, content) VALUES (:posted_at, :title, :content)', self::quoteIdent($table_name)));
+			$stmt = $pdo->prepare(sprintf($sql, self::quoteIdent($table_name)));
 			$stmt->bindValue(':posted_at', $posted_at->format('Y-m-d H:i:s'), \PDO::PARAM_STR);
 			$stmt->bindValue(':title', $title, \PDO::PARAM_STR);
 			$stmt->bindValue(':content', $content, \PDO::PARAM_STR);
+			if (!is_null($id)) {
+				$stmt->bindValue(':id', $id, \PDO::PARAM_INT);
+			}
 
 			$stmt->execute();
 
