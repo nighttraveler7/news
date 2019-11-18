@@ -91,7 +91,7 @@ class News {
 		$user = $this->user;
 		$password = $this->password;
 		if (is_null($posted_at)) {
-			$posted_at = new \Date();
+			$posted_at = new \DateTime();
 		}
 		$table_name = $this->table_name;
 
