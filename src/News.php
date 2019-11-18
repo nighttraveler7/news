@@ -18,6 +18,52 @@ class News {
 		$this->table_name = $table_name;
 	}
 
+	public function get_entry($id) {
+		$dsn = $this->dsn;
+		$user = $this->user;
+		$password = $this->password;
+		$table_name = $this->table_name;
+
+		try {
+			$pdo = new \PDO($dsn, $user, $password);
+
+			$stmt = $pdo->prepare(sprintf('SELECT * FROM %s WHERE id = :id', self::quoteIdent($table_name)));
+			$stmt->bindValue(':id', $id, \PDO::PARAM_INT);
+
+			$stmt->execute();
+
+			return $stmt->fetch(\PDO::FETCH_ASSOC);
+		}
+		catch (\PDOException $e) {
+			echo 'Database Routine Error: ' . $e->getMessage() . "\n";
+
+			return false;
+		}
+	}
+
+	public function delete_entry($id) {
+		$dsn = $this->dsn;
+		$user = $this->user;
+		$password = $this->password;
+		$table_name = $this->table_name;
+
+		try {
+			$pdo = new \PDO($dsn, $user, $password);
+
+			$stmt = $pdo->prepare(sprintf('DELETE FROM %s WHERE id = :id', self::quoteIdent($table_name)));
+			$stmt->bindValue(':id', $id, \PDO::PARAM_INT);
+
+			$stmt->execute();
+
+			return true;
+		}
+		catch (\PDOException $e) {
+			echo 'Database Routine Error: ' . $e->getMessage() . "\n";
+
+			return false;
+		}
+	}
+
 	public function list() {
 		$dsn = $this->dsn;
 		$user = $this->user;
@@ -33,8 +79,8 @@ class News {
 
 			return $stmt->fetchAll();
 		}
-		catch (PDOException $e) {
-			echo 'Database Routine Error: ' . $e->getMessage() . '\n';
+		catch (\PDOException $e) {
+			echo 'Database Routine Error: ' . $e->getMessage() . "\n";
 
 			return false;
 		}
@@ -53,16 +99,16 @@ class News {
 			$pdo = new \PDO($dsn, $user, $password);
 
 			$stmt = $pdo->prepare(sprintf('INSERT INTO %s (posted_at, title, content) VALUES (:posted_at, :title, :content)', self::quoteIdent($table_name)));
-			$stmt->bindValue(':posted_at', $posted_at->format('Y-m-d H:i:s'), PDO::PARAM_STR);
-			$stmt->bindValue(':title', $title, PDO::PARAM_STR);
-			$stmt->bindValue(':content', $content, PDO::PARAM_STR);
+			$stmt->bindValue(':posted_at', $posted_at->format('Y-m-d H:i:s'), \PDO::PARAM_STR);
+			$stmt->bindValue(':title', $title, \PDO::PARAM_STR);
+			$stmt->bindValue(':content', $content, \PDO::PARAM_STR);
 
 			$stmt->execute();
 
 			return true;
 		}
-		catch (PDOException $e) {
-			echo 'Database Routine Error: ' . $e->getMessage() . '\n';
+		catch (\PDOException $e) {
+			echo 'Database Routine Error: ' . $e->getMessage() . "\n";
 
 			return false;
 		}
